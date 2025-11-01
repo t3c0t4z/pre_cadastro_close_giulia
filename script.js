@@ -1,18 +1,22 @@
 /**
  * ============================================================================
  * Close Friends VIP - Giulia Castro
- * JAVASCRIPT EXTERNO - Funções e Lógica
+ * JAVASCRIPT LIMPO - Conexão com n8n Webhook
  * ============================================================================
- * Data de criação: 30/10/2025
- * Última atualização: 30/10/2025
+ * Data de criação: 31/10/2025
+ * Última atualização: 31/10/2025
  * ============================================================================
  */
 
 'use strict';
 
+// ========================================
+// CONFIGURAÇÃO DA WEBHOOK
+// ========================================
+const WEBHOOK_URL = 'https://n8noraclefull.t3c0t4z.shop/webhook/lead-cadastro';
 
 // ========================================
-// REGEX PATTERNS RIGOROSOS
+// REGEX PATTERNS
 // ========================================
 const VALIDATION_PATTERNS = {
   instagram: /^@[a-zA-Z0-9_.]{1,29}$/,
@@ -53,7 +57,6 @@ const profileImg = document.getElementById('profileImg');
 // ========================================
 // VALIDAÇÃO EM TEMPO REAL
 // ========================================
-
 function validateUsername(value, showFeedback = true) {
   const errorEl = document.getElementById('usernameError');
   const successEl = document.getElementById('usernameSuccess');
@@ -184,7 +187,6 @@ function maskWhatsApp(value) {
 // ========================================
 // EVENT LISTENERS - VALIDAÇÃO
 // ========================================
-
 usernameInput.addEventListener('input', (e) => {
   validateUsername(e.target.value.trim(), false);
 });
@@ -251,7 +253,6 @@ if (savedTheme) {
 // ========================================
 // EFEITOS NA IMAGEM
 // ========================================
-
 profileImg.addEventListener('mousemove', (e) => {
   const rect = profileImg.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -307,133 +308,6 @@ rippleStyle.textContent = `
 document.head.appendChild(rippleStyle);
 
 // ========================================
-// SUBMIT COM DEBUG MERCADO PAGO
-// ========================================
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  
-  console.log('🚀 Form submitted!');
-  
-  const username = usernameInput.value.trim();
-  const whatsapp = whatsappInput.value.trim();
-  const email = emailInput.value.trim();
-  
-  const isUsernameValid = validateUsername(username, true);
-  const isWhatsAppValid = validateWhatsApp(whatsapp, true);
-  const isEmailValid = validateEmail(email, true);
-  
-  if (!isUsernameValid || !isWhatsAppValid || !isEmailValid) {
-    console.log('❌ Validação falhou');
-    const firstInvalid = form.querySelector('.form-input.invalid');
-    if (firstInvalid) {
-      firstInvalid.focus();
-      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    return;
-  }
-  
-  console.log('✅ Validação OK');
-  
-  submitBtn.disabled = true;
-  submitBtn.textContent = '⏳ Processando...';
-  submitBtn.style.opacity = '0.7';
-  
-  const payload = {
-    username: username,
-    whatsapp: whatsapp,
-    email: email,
-    submitted_at: new Date().toISOString(),
-    source: 'close_friends_landing_page'
-  };
-  
-  console.log('📤 Enviando dados:', payload);
-  
-  try {
-    console.log('🔗 Chamando webhook:', 'https://n8noraclefull.t3c0t4z.shop/webhook/lead-cadastro');
-    
-    const response = await fetch('https://n8noraclefull.t3c0t4z.shop/webhook/lead-cadastro', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-    
-    console.log('📥 Response status:', response.status);
-    console.log('📥 Response ok:', response.ok);
-    
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Erro na resposta:', errorText);
-      throw new Error('Erro ao processar pagamento');
-    }
-    
-    const data = await response.json();
-    console.log('📦 Dados recebidos:', data);
-    
-    // Verificar se tem init_point
-    if (data.init_point) {
-      console.log('💳 Link de pagamento encontrado:', data.init_point);
-      
-      createConfetti();
-      
-      submitBtn.textContent = '✅ Redirecionando para pagamento...';
-      submitBtn.style.background = 'linear-gradient(135deg, #00f178, #00b894)';
-      submitBtn.style.opacity = '1';
-      
-      console.log('🔄 Redirecionando em 1.5s...');
-      
-      setTimeout(() => {
-        console.log('🌐 Redirecionando para:', data.init_point);
-        window.location.href = data.init_point;
-      }, 1500);
-      
-    } else {
-      console.warn('⚠️ init_point não encontrado na resposta');
-      console.log('📋 Resposta completa:', JSON.stringify(data, null, 2));
-      
-      submitBtn.textContent = '✅ Dados Enviados!';
-      submitBtn.style.background = 'linear-gradient(135deg, #00f178, #00b894)';
-      submitBtn.style.opacity = '1';
-      
-      createConfetti();
-      
-      alert('🎉 Dados enviados com sucesso!\n\n⚠️ O link de pagamento não foi retornado pelo servidor.\n\nVerifique o console (F12) para mais detalhes.');
-      
-      setTimeout(() => {
-        form.reset();
-        document.querySelectorAll('.form-input').forEach(input => {
-          input.classList.remove('valid', 'invalid');
-        });
-        document.querySelectorAll('.validation-feedback').forEach(feedback => {
-          feedback.classList.remove('show');
-        });
-        submitBtn.disabled = false;
-        submitBtn.textContent = '🔥 Quero Acesso Agora';
-        submitBtn.style.background = '';
-        submitBtn.style.opacity = '';
-      }, 3000);
-    }
-    
-  } catch (error) {
-    console.error('❌ Erro ao enviar:', error);
-    
-    submitBtn.textContent = '❌ Erro - Tente Novamente';
-    submitBtn.style.background = 'linear-gradient(135deg, #ff4757, #e84118)';
-    submitBtn.style.opacity = '1';
-    
-    alert('❌ Erro ao processar pagamento.\n\nVerifique o console (F12) para mais detalhes.\n\nErro: ' + error.message);
-    
-    setTimeout(() => {
-      submitBtn.disabled = false;
-      submitBtn.textContent = '🔥 Quero Acesso Agora';
-      submitBtn.style.background = '';
-      submitBtn.style.opacity = '';
-    }, 3000);
-  }
-});
-
-// ========================================
 // CONFETTI EFFECT
 // ========================================
 function createConfetti() {
@@ -473,10 +347,98 @@ function createConfetti() {
 }
 
 // ========================================
+// SUBMIT LIMPO - APENAS N8N WEBHOOK
+// ========================================
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const username = usernameInput.value.trim();
+  const whatsapp = whatsappInput.value.trim();
+  const email = emailInput.value.trim();
+  
+  // Validação completa
+  const isUsernameValid = validateUsername(username, true);
+  const isWhatsAppValid = validateWhatsApp(whatsapp, true);
+  const isEmailValid = validateEmail(email, true);
+  
+  if (!isUsernameValid || !isWhatsAppValid || !isEmailValid) {
+    const firstInvalid = form.querySelector('.form-input.invalid');
+    if (firstInvalid) {
+      firstInvalid.focus();
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return;
+  }
+  
+  // Desabilitar botão
+  submitBtn.disabled = true;
+  submitBtn.textContent = '⏳ Enviando...';
+  submitBtn.style.opacity = '0.7';
+  
+  // Payload limpo
+  const payload = {
+    username: username,
+    whatsapp: whatsapp,
+    email: email,
+    origem: window.location.href,
+    timestamp: new Date().toISOString()
+  };
+  
+  try {
+    const response = await fetch(WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Erro ${response.status}: ${response.statusText}`);
+    }
+    
+    const data = await response.json();
+    
+    // Sucesso
+    createConfetti();
+    
+    submitBtn.textContent = '✅ Cadastro Realizado!';
+    submitBtn.style.background = 'linear-gradient(135deg, #00f178, #00b894)';
+    submitBtn.style.opacity = '1';
+    
+    // Reset formulário após 2 segundos
+    setTimeout(() => {
+      form.reset();
+      document.querySelectorAll('.form-input').forEach(input => {
+        input.classList.remove('valid', 'invalid');
+      });
+      document.querySelectorAll('.validation-feedback').forEach(feedback => {
+        feedback.classList.remove('show');
+      });
+      submitBtn.disabled = false;
+      submitBtn.textContent = '🔥 Quero Acesso Agora';
+      submitBtn.style.background = '';
+      submitBtn.style.opacity = '';
+    }, 2000);
+    
+  } catch (error) {
+    console.error('❌ Erro ao enviar:', error);
+    
+    submitBtn.textContent = '❌ Erro - Tente Novamente';
+    submitBtn.style.background = 'linear-gradient(135deg, #ff4757, #e84118)';
+    submitBtn.style.opacity = '1';
+    
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      submitBtn.textContent = '🔥 Quero Acesso Agora';
+      submitBtn.style.background = '';
+      submitBtn.style.opacity = '';
+    }, 3000);
+  }
+});
+
+// ========================================
 // CONSOLE BRANDING
 // ========================================
 console.log('%c💚 Close Friends VIP - Giulia Castro', 'color: #00f178; font-size: 24px; font-weight: bold;');
-console.log('%c✨ Landing Page Premium com Mercado Pago', 'color: #00b894; font-size: 16px; font-weight: 600;');
-console.log('%c🔍 Debug Mode ATIVADO - Todos os logs aparecerão aqui', 'color: #ffd700; font-size: 12px;');
-console.log('%c📊 Abra este console para ver o que está acontecendo com o Mercado Pago', 'color: #ff3b9a; font-size: 12px;');
-
+console.log('%c✨ Landing Page conectada ao n8n', 'color: #00b894; font-size: 16px;');
