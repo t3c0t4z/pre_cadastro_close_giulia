@@ -349,7 +349,7 @@ form.addEventListener('submit', async (e) => {
   console.log('📤 Enviando dados:', payload);
   
   try {
-    const n8nWebhookUrl = 'https://n8noraclefull.t3c0t4z.shop/webhook/lead-cadastro';
+    const n8nWebhookUrl = 'https://n8noraclefull.t3c0t4z.shop/webhook/pre-cadastro';
     const successRedirectUrl = 'https://closefriendsgiuliacastrovprecadastro.nextupduo.com/';
 
     console.log('🔗 Chamando webhook:', n8nWebhookUrl);
