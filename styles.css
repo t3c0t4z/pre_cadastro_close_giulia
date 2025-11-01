@@ -4,890 +4,733 @@
  * CSS EXTERNO - Estilos Globais
  * ============================================================================
  * Data de criação: 30/10/2025
- * Última atualização: 01/11/2025
+ * Última atualização: 30/10/2025
  * ============================================================================
  */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-:root {
-  --ig-cf-green: #00f178;
-  --ig-cf-dark: #0f0f0f;
-  --ig-cf-surface: #1a1a1a;
-  --ig-cf-surface-light: #262626;
-  --ig-cf-text: #ffffff;
-  --ig-cf-text-secondary: #a8a8a8;
-  --ig-cf-border: #363636;
-  --ig-cf-gradient: linear-gradient(135deg, #00f178 0%, #00b894 100%);
-  --error-red: #ff4757;
-  --success-green: #00f178;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.24);
-  --shadow-glow: 0 0 24px rgba(0, 241, 120, 0.3);
-}
-
-[data-theme="light"] {
-  --ig-cf-dark: #fafafa;
-  --ig-cf-surface: #ffffff;
-  --ig-cf-surface-light: #f5f5f5;
-  --ig-cf-text: #0f0f0f;
-  --ig-cf-text-secondary: #737373;
-  --ig-cf-border: #e5e5e5;
-}
-
-html {
-  font-size: 18px;
-  -webkit-font-smoothing: antialiased;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: var(--ig-cf-dark);
-  background-image: url('https://lhujzzoqebgjbsnezmrt.supabase.co/storage/v1/object/public/Photos/giuliainstagram2.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  color: var(--ig-cf-text);
-  line-height: 1.6;
-  overflow-x: hidden;
-  min-height: 100vh;
-  position: relative;
-}
-
-/* Camada transparente sobre a foto da Giulia */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 15, 15, 0.96);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Garante que o conteúdo fique acima da camada */
-.container,
-.hero,
-.form-card,
-.faq-section,
-.footer {
-  position: relative;
-  z-index: 1;
-}
-
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at 80% 70%, rgba(0, 241, 120, 0.03) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* Theme Toggle */
-.theme-toggle {
-  position: fixed;
-  top: 24px;
-  right: 24px;
-  width: 56px;
-  height: 56px;
-  background: var(--ig-cf-surface);
-  border: 1px solid var(--ig-cf-border);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1000;
-  transition: all 0.3s ease;
-  box-shadow: var(--shadow-md);
-}
-
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-  border-color: var(--ig-cf-green);
-}
-
-.theme-toggle svg {
-  width: 24px;
-  height: 24px;
-  color: var(--ig-cf-text);
-  transition: transform 0.5s ease;
-}
-
-/* Quick Access Button */
-.quick-access {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  width: 64px;
-  height: 64px;
-  background: var(--ig-cf-gradient);
-  border: none;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1000;
-  box-shadow: 0 8px 32px rgba(0, 241, 120, 0.4);
-  animation: pulse-btn 2s ease-in-out infinite;
-  transition: all 0.3s ease;
-}
-
-.quick-access:hover {
-  transform: scale(1.1);
-  box-shadow: 0 12px 40px rgba(0, 241, 120, 0.6);
-  animation: blink-on-hover 0.5s ease-in-out infinite;
-}
-
-.quick-access svg {
-  width: 32px;
-  height: 32px;
-  color: white;
-}
-
-@keyframes pulse-btn {
-  0%, 100% { box-shadow: 0 8px 32px rgba(0, 241, 120, 0.4); }
-  50% { box-shadow: 0 8px 32px rgba(0, 241, 120, 0.7); }
-}
-
-@keyframes blink-on-hover {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-/* Container */
-.main-container {
-  position: relative;
-  z-index: 1;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 40px 24px;
-}
-
-.content-wrapper {
-  width: 100%;
-  max-width: 1200px;
-  display: grid;
-  grid-template-columns: 1fr 480px;
-  gap: 80px;
-  align-items: center;
-}
-
-/* Form Section */
-.form-section {
-  background: var(--ig-cf-surface);
-  border: 1px solid var(--ig-cf-border);
-  border-radius: 24px;
-  padding: 48px 40px;
-  box-shadow: var(--shadow-xl);
-  backdrop-filter: blur(20px);
-  transition: all 0.3s ease;
-}
-
-.form-section:hover {
-  border-color: rgba(0, 241, 120, 0.3);
-  box-shadow: var(--shadow-xl), var(--shadow-glow);
-}
-
-/* Branding Header */
-.branding-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.brand-title {
-  font-family: 'Great Vibes', serif;
-  font-size: 5.0rem;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--ig-cf-text);
-  margin-bottom: 8px;
-  letter-spacing: -0.02em;
-}
-
-.brand-subtitle {
-  font-family: 'Great Vibes', serif;
-  font-size: 4rem;
-  font-weight: 400;
-  font-style: italic;
-  margin-top: 30px;
-  background: var(--ig-cf-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.form-header {
-  text-align: center;
-  margin-bottom: 32px;
-}
-
-.form-title {
-  font-family: 'Sora', sans-serif;
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--ig-cf-text);
-  margin-bottom: 8px;
-  letter-spacing: -0.02em;
-}
-
-.form-title .highlight {
-  background: var(--ig-cf-gradient);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.form-subtitle {
-  font-size: 1rem;
-  color: var(--ig-cf-text-secondary);
-  font-weight: 400;
-}
-
-/* Form Inputs */
-.form-group {
-  margin-bottom: 24px;
-  position: relative;
-}
-
-.form-label {
-  display: block;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--ig-cf-text);
-  margin-bottom: 8px;
-}
-
-.input-wrapper {
-  position: relative;
-}
-
-.form-input {
-  width: 100%;
-  padding: 14px 16px 14px 44px;
-  background: var(--ig-cf-surface-light);
-  border: 2px solid var(--ig-cf-border);
-  border-radius: 12px;
-  font-size: 1rem;
-  color: var(--ig-cf-text);
-  font-family: 'Inter', sans-serif;
-  transition: all 0.2s ease;
-  outline: none;
-}
-
-.form-input::placeholder {
-  color: var(--ig-cf-text-secondary);
-  opacity: 0.6;
-}
-
-.form-input:focus {
-  border-color: var(--ig-cf-green);
-  background: var(--ig-cf-surface);
-  box-shadow: 0 0 0 4px rgba(0, 241, 120, 0.1);
-}
-
-/* Inputs Válidos */
-.form-input.valid {
-  border-color: var(--success-green);
-  background: #E8F0FE !important;
-  background-color: #E8F0FE !important;
-  color: #000000 !important;
-  -webkit-text-fill-color: #000000 !important;
-}
-
-.form-input.invalid {
-  border-color: var(--error-red);
-  background: rgba(255, 71, 87, 0.05);
-  animation: shake 0.3s ease;
-}
-
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  75% { transform: translateX(8px); }
-}
-
-.input-icon {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-42%);
-  font-size: 20px;
-  color: var(--ig-cf-text-secondary);
-  transition: color 0.2s ease;
-  pointer-events: none;
-}
-
-.input-icon img {
-  width: 28px;
-  height: 28px;
-  object-fit: contain;
-  filter: opacity(0.7) brightness(1.2);
-  transition: all 0.2s ease;
-}
-
-.form-input:focus ~ .input-icon img,
-.form-input.valid ~ .input-icon img {
-  filter: opacity(1) brightness(1);
-  transform: scale(1.1);
-}
-
-.form-input:hover ~ .input-icon img {
-  filter: opacity(0.85) brightness(1.1);
-}
-
-.form-input:focus ~ .input-icon,
-.form-input.valid ~ .input-icon {
-  color: var(--ig-cf-green);
-}
-
-.form-input.invalid ~ .input-icon {
-  color: var(--error-red);
-}
-
-.validation-feedback {
-  display: none;
-  font-size: 0.75rem;
-  margin-top: 6px;
-  font-weight: 500;
-}
-
-.validation-feedback.show {
-  display: block;
-}
-
-.validation-feedback.error {
-  color: var(--error-red);
-}
-
-.validation-feedback.success {
-  color: var(--success-green);
-}
-
-/* Submit Button */
-.btn-submit {
-  width: 100%;
-  padding: 16px 32px;
-  background: var(--ig-cf-gradient);
-  color: #ffffff;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  font-family: 'Sora', sans-serif;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 8px 24px rgba(0, 241, 120, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-
-.btn-submit::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.btn-submit:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 32px rgba(0, 241, 120, 0.4);
-}
-
-.btn-submit:hover::before {
-  opacity: 1;
-}
-
-.btn-submit:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* Trust Badges */
-.trust-badges {
-  display: flex;
-  justify-content: center;
-  gap: 24px;
-  margin-top: 32px;
-  padding-top: 32px;
-  border-top: 1px solid var(--ig-cf-border);
-  flex-wrap: wrap;
-}
-
-.trust-badge {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  font-family: 'Sora', sans-serif;
-}
-
-.trust-badge-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 12px;
-  background: rgba(0, 241, 120, 0.1);
-  border: 1px solid rgba(0, 241, 120, 0.2);
-}
-
-.trust-badge-icon svg {
-  width: 24px;
-  height: 24px;
-  color: var(--ig-cf-green);
-}
-
-.trust-badge-text {
-  font-size: 0.8rem;
-  color: var(--ig-cf-text-secondary);
-  font-weight: 600;
-  text-align: center;
-}
-
-/* Security Logos */
-.security-logos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: center;
-  justify-content: center;
-  margin-top: 24px;
-  padding: 20px;
-  background: var(--ig-cf-surface-light);
-  border-radius: 12px;
-}
-
-.security-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: var(--ig-cf-surface);
-  border: 1px solid var(--ig-cf-border);
-  border-radius: 8px;
-  transition: all 0.3s ease;
-}
-
-.security-badge:hover {
-  border-color: var(--ig-cf-green);
-  transform: translateY(-2px);
-}
-
-.security-badge-icon {
-  font-size: 20px;
-}
-
-.security-badge-text {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: var(--ig-cf-text);
-  font-family: 'Inter', sans-serif;
-  letter-spacing: 0.05em;
-}
-
-/* IMAGE SECTION */
-.image-section {
-  position: relative;
-  width: 100%;
-  height: 480px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.image-container {
-  position: relative;
-  width: 380px;
-  height: 380px;
-}
-
-/* Glow rings animados */
-.glow-ring {
-  position: absolute;
-  inset: -40px;
-  border-radius: 50%;
-  background: conic-gradient(
-    from 0deg,
-    var(--ig-cf-green),
-    transparent,
-    var(--ig-cf-green)
-  );
-  filter: blur(30px);
-  opacity: 0.6;
-  animation: rotate-glow 8s linear infinite;
-  z-index: 0;
-}
-
-@keyframes rotate-glow {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
-
-.glow-ring-2 {
-  animation: rotate-glow 6s linear infinite reverse;
-  inset: -20px;
-  filter: blur(20px);
-  opacity: 0.4;
-}
-
-/* Imagem Principal */
-.profile-image {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 6px solid var(--ig-cf-surface);
-  box-shadow: var(--shadow-xl);
-  z-index: 2;
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.profile-image:hover {
-  transform: scale(1.05);
-  border-color: var(--ig-cf-green);
-  box-shadow: var(--shadow-xl), var(--shadow-glow);
-}
-
-/* Coração Verde 3D */
-.heart-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  width: 64px;
-  height: 64px;
-  background: linear-gradient(135deg, #00ff7f, #00f178, #00b894);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    0 8px 24px rgba(0, 255, 127, 0.6),
-    0 0 40px rgba(0, 241, 120, 0.4),
-    inset 0 -4px 8px rgba(0, 0, 0, 0.2),
-    inset 0 4px 8px rgba(255, 255, 255, 0.3);
-  z-index: 10;
-  animation: heartbeat-green 1.5s ease-in-out infinite;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 3px solid rgba(255, 255, 255, 0.5);
-}
-
-.heart-badge:hover {
-  transform: scale(1.15);
-  box-shadow: 
-    0 12px 32px rgba(0, 255, 127, 0.8),
-    0 0 60px rgba(0, 241, 120, 0.6);
-}
-
-.heart-badge svg {
-  width: 32px;
-  height: 32px;
-  color: white;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-}
-
-@keyframes heartbeat-green {
-  0%, 100% { 
-    transform: scale(1);
-    box-shadow: 
-      0 8px 24px rgba(0, 255, 127, 0.6),
-      0 0 40px rgba(0, 241, 120, 0.4);
-  }
-  25% { 
-    transform: scale(1.1);
-    box-shadow: 
-      0 12px 32px rgba(0, 255, 127, 0.8),
-      0 0 60px rgba(0, 241, 120, 0.6);
-  }
-  50% { transform: scale(1); }
-  75% { transform: scale(1.05); }
-}
-
-/* ÍCONE DA FOTO */
-.photo-icon-badge {
-  position: absolute;
-  bottom: 80px;
-  left: 20px;
-  width: 72px;
-  height: 72px;
-  background: linear-gradient(135deg, #00ff7f, #00f178);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    0 8px 24px rgba(0, 241, 120, 0.5),
-    0 0 30px rgba(0, 255, 127, 0.3);
-  z-index: 10;
-  animation: float-icon 3s ease-in-out infinite;
-  cursor: pointer;
-  border: 4px solid var(--ig-cf-surface);
-  transition: all 0.3s ease;
-  overflow: hidden;
-}
-
-.photo-icon-badge:hover {
-  transform: translateY(-5px) scale(1.1);
-  box-shadow: 
-    0 12px 32px rgba(0, 241, 120, 0.7),
-    0 0 50px rgba(0, 255, 127, 0.5);
-}
-
-.photo-icon-badge img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-@keyframes float-icon {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-/* ============================================================================
-   ERRO - CADASTRO DUPLICADO
-   ============================================================================ */
-
-.error-message-duplicate {
-  background: linear-gradient(135deg, #ff4444 0%, #dd0000 100%);
-  color: white;
-  padding: 16px 20px;
-  border-radius: 12px;
-  margin-top: 20px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 16px;
-  border: 2px solid #cc0000;
-  box-shadow: 
-    0 8px 24px rgba(255, 68, 68, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  animation: blinkingError 0.7s infinite;
-  position: relative;
-  overflow: hidden;
-}
-
-.error-message-duplicate::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, 
-    transparent 0%, 
-    rgba(255, 255, 255, 0.1) 50%, 
-    transparent 100%);
-  animation: shimmer 2s infinite;
-}
-
-.error-message-content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  position: relative;
-  z-index: 1;
-}
-
-.error-message-content svg {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  animation: pulse-error 1s ease-in-out infinite;
-}
-
-.error-message-content p {
-  margin: 0;
-  font-size: 16px;
-  font-family: 'Sora', sans-serif;
-  letter-spacing: 0.3px;
-}
-
-@keyframes blinkingError {
-  0%, 49% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  50%, 100% {
-    opacity: 0.35;
-    transform: scale(0.98);
-  }
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
-
-@keyframes pulse-error {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.2);
-    opacity: 0.8;
-  }
-}
-
-/* Responsivo para Tablet */
-@media (max-width: 768px) {
-  .content-wrapper {
-    grid-template-columns: 1fr;
-    gap: 48px;
-  }
-
-  .form-section {
-    padding: 36px 28px;
-  }
-
-  .brand-title {
-    font-size: 2.8rem;
-  }
-
-  .brand-subtitle {
-    font-size: 1.6rem;
-  }
-
-  .image-section {
-    order: -1;
-    height: 400px;
-  }
-
-  .image-container {
-    width: 320px;
-    height: 320px;
-  }
-
-  .heart-badge {
-    width: 56px;
-    height: 56px;
-  }
-
-  .heart-badge svg {
-    width: 28px;
-    height: 28px;
-  }
-
-  .photo-icon-badge {
-    width: 60px;
-    height: 60px;
-    bottom: 60px;
-  }
-
-  .error-message-duplicate {
-    padding: 14px 16px;
-    font-size: 15px;
-    margin-top: 16px;
-    border-radius: 10px;
-  }
-
-  .error-message-content {
-    gap: 10px;
-  }
-
-  .error-message-content svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .error-message-content p {
-    font-size: 15px;
-  }
-
-  #nome-giulia-mobile,
-  .brand-subtitle {
-    font-size: 3.5rem !important;
-    font-weight: 600 !important;
-  }
-}
-
-/* Responsivo para Mobile */
-@media (max-width: 480px) {
-  .main-container {
-    padding: 24px 16px;
-  }
-
-  .form-section {
-    padding: 24px 20px;
-    border-radius: 16px;
-  }
-
-  .brand-title {
-    font-size: 2rem;
-  }
-
-  .form-title {
-    font-size: 1.3rem;
-  }
-
-  .form-subtitle {
-    font-size: 0.9rem;
-  }
-
-  .error-message-duplicate {
-    padding: 12px 14px;
-    font-size: 14px;
-    margin-top: 14px;
-    border-radius: 8px;
-    border-width: 1.5px;
-  }
-
-  .error-message-content {
-    gap: 8px;
-  }
-
-  .error-message-content svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .error-message-content p {
-    font-size: 14px;
-  }
-
-  #nome-giulia-mobile,
-  .brand-subtitle {
-    font-size: 2.2rem !important;
-    font-weight: 600 !important;
-  }
-
-  .trust-badges {
-    gap: 16px;
-  }
-
-  .security-logos {
-    gap: 12px;
-    padding: 16px;
-  }
-
-  .security-badge {
-    padding: 6px 12px;
-    font-size: 0.7rem;
-  }
-}
-
-/* Light Mode */
-[data-theme="light"] .error-message-duplicate {
-  background: linear-gradient(135deg, #ff5555 0%, #ee1111 100%);
-  border-color: #dd0000;
-  box-shadow: 
-    0 8px 24px rgba(255, 68, 68, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.2);
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    :root {
+      --ig-cf-green: #00f178;
+      --ig-cf-dark: #0f0f0f;
+      --ig-cf-surface: #1a1a1a;
+      --ig-cf-surface-light: #262626;
+      --ig-cf-text: #ffffff;
+      --ig-cf-text-secondary: #a8a8a8;
+      --ig-cf-border: #363636;
+      --ig-cf-gradient: linear-gradient(135deg, #00f178 0%, #00b894 100%);
+      --error-red: #ff4757;
+      --success-green: #00f178;
+      --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+      --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+      --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+      --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.24);
+      --shadow-glow: 0 0 24px rgba(0, 241, 120, 0.3);
+    }
+    
+    [data-theme="light"] {
+      --ig-cf-dark: #fafafa;
+      --ig-cf-surface: #ffffff;
+      --ig-cf-surface-light: #f5f5f5;
+      --ig-cf-text: #0f0f0f;
+      --ig-cf-text-secondary: #737373;
+      --ig-cf-border: #e5e5e5;
+    }
+    
+    html {
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--ig-cf-dark);
+      background-image: url('https://lhujzzoqebgjbsnezmrt.supabase.co/storage/v1/object/public/Photos/giuliainstagram2.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: var(--ig-cf-text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Camada transparente sobre a foto da Giulia */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 15, 15, 0.96);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Garante que o conteúdo fique acima da camada */
+    .container,
+    .hero,
+    .form-card,
+    .faq-section,
+    .footer {
+      position: relative;
+      z-index: 1;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 80% 70%, rgba(0, 241, 120, 0.03) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    
+    /* Theme Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      background: var(--ig-cf-surface);
+      border: 1px solid var(--ig-cf-border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-md);
+    }
+    
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--ig-cf-green);
+    }
+    
+    .theme-toggle svg {
+      width: 24px;
+      height: 24px;
+      color: var(--ig-cf-text);
+      transition: transform 0.5s ease;
+    }
+    
+    /* Quick Access Button - COM PISCADA AO HOVER */
+    .quick-access {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 64px;
+      height: 64px;
+      background: var(--ig-cf-gradient);
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 8px 32px rgba(0, 241, 120, 0.4);
+      animation: pulse-btn 2s ease-in-out infinite;
+      transition: all 0.3s ease;
+    }
+    
+    .quick-access:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 40px rgba(0, 241, 120, 0.6);
+      animation: blink-on-hover 0.5s ease-in-out infinite;
+    }
+    
+    .quick-access svg {
+      width: 32px;
+      height: 32px;
+      color: white;
+    }
+    
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 8px 32px rgba(0, 241, 120, 0.4); }
+      50% { box-shadow: 0 8px 32px rgba(0, 241, 120, 0.7); }
+    }
+    
+    @keyframes blink-on-hover {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    /* Container */
+    .main-container {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+    
+    .content-wrapper {
+      width: 100%;
+      max-width: 1200px;
+      display: grid;
+      grid-template-columns: 1fr 480px;
+      gap: 80px;
+      align-items: center;
+    }
+    
+    /* Form Section */
+    .form-section {
+      background: var(--ig-cf-surface);
+      border: 1px solid var(--ig-cf-border);
+      border-radius: 24px;
+      padding: 48px 40px;
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(20px);
+      transition: all 0.3s ease;
+    }
+    
+    .form-section:hover {
+      border-color: rgba(0, 241, 120, 0.3);
+      box-shadow: var(--shadow-xl), var(--shadow-glow);
+    }
+    
+    /* Branding Header - NOME MAIOR */
+    .branding-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .brand-title {
+      font-family: 'Great Vibes', serif;
+      font-size: 5.0rem;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--ig-cf-text);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    
+    .brand-subtitle {
+      font-family: 'Great Vibes', serif;
+      font-size: 4rem;
+      font-weight: 400;
+      font-style: italic;
+      margin-top: 30px;
+      background: var(--ig-cf-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .form-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    
+    .form-title {
+      font-family: 'Sora', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--ig-cf-text);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    
+    .form-title .highlight {
+      background: var(--ig-cf-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .form-subtitle {
+      font-size: 1rem;
+      color: var(--ig-cf-text-secondary);
+      font-weight: 400;
+    }
+    
+    /* Form Inputs - USERNAME BRANCO QUANDO VÁLIDO */
+    .form-group {
+      margin-bottom: 24px;
+      position: relative;
+    }
+    
+    .form-label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--ig-cf-text);
+      margin-bottom: 8px;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      background: var(--ig-cf-surface-light);
+      border: 2px solid var(--ig-cf-border);
+      border-radius: 12px;
+      font-size: 1rem;
+      color: var(--ig-cf-text);
+      font-family: 'Inter', sans-serif;
+      transition: all 0.2s ease;
+      outline: none;
+    }
+    
+    .form-input::placeholder {
+      color: var(--ig-cf-text-secondary);
+      opacity: 0.6;
+    }
+    
+    .form-input:focus {
+      border-color: var(--ig-cf-green);
+      background: var(--ig-cf-surface);
+      box-shadow: 0 0 0 4px rgba(0, 241, 120, 0.1);
+    }
+    
+    /* TODOS OS INPUTS FICAM VERDES CLAROS QUANDO VÁLIDOS */
+    .form-input.valid {
+      border-color: var(--success-green);
+      background: #E8F0FE !important;
+      background-color: #E8F0FE !important;
+      color: #000000 !important;
+      -webkit-text-fill-color: #000000 !important;
+    }
+    
+    .form-input.invalid {
+      border-color: var(--error-red);
+      background: rgba(255, 71, 87, 0.05);
+      animation: shake 0.3s ease;
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+    
+    .input-icon {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-42%);
+      font-size: 20px;
+      color: var(--ig-cf-text-secondary);
+      transition: color 0.2s ease;
+      pointer-events: none;
+    }
+    /* Estilo para ícones de imagem nos inputs */
+    .input-icon img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      filter: opacity(0.7) brightness(1.2);
+      transition: all 0.2s ease;
+    }
+
+    .form-input:focus ~ .input-icon img,
+    .form-input.valid ~ .input-icon img {
+      filter: opacity(1) brightness(1);
+      transform: scale(1.1);
+    }
+
+    .form-input:hover ~ .input-icon img {
+      filter: opacity(0.85) brightness(1.1);
+    }
+
+    .form-input:focus ~ .input-icon,
+    .form-input.valid ~ .input-icon {
+      color: var(--ig-cf-green);
+    }
+    
+    .form-input.invalid ~ .input-icon {
+      color: var(--error-red);
+    }
+    
+    .validation-feedback {
+      display: none;
+      font-size: 0.75rem;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+    
+    .validation-feedback.show {
+      display: block;
+    }
+    
+    .validation-feedback.error {
+      color: var(--error-red);
+    }
+    
+    .validation-feedback.success {
+      color: var(--success-green);
+    }
+    
+    /* Submit Button */
+    .btn-submit {
+      width: 100%;
+      padding: 16px 32px;
+      background: var(--ig-cf-gradient);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0, 241, 120, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-submit::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(0, 241, 120, 0.4);
+    }
+    
+    .btn-submit:hover::before {
+      opacity: 1;
+    }
+    
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    /* Trust Badges */
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid var(--ig-cf-border);
+      flex-wrap: wrap;
+    }
+    
+    .trust-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Sora', sans-serif;
+    }
+    
+    .trust-badge-icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      background: rgba(0, 241, 120, 0.1);
+      border: 1px solid rgba(0, 241, 120, 0.2);
+    }
+    
+    .trust-badge-icon svg {
+      width: 24px;
+      height: 24px;
+      color: var(--ig-cf-green);
+    }
+    
+    .trust-badge-text {
+      font-size: 0.8rem;
+      color: var(--ig-cf-text-secondary);
+      font-weight: 600;
+      text-align: center;
+    }
+    
+    /* Security Logos */
+    .security-logos {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      padding: 20px;
+      background: var(--ig-cf-surface-light);
+      border-radius: 12px;
+    }
+    
+    .security-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: var(--ig-cf-surface);
+      border: 1px solid var(--ig-cf-border);
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .security-badge:hover {
+      border-color: var(--ig-cf-green);
+      transform: translateY(-2px);
+    }
+    
+    .security-badge-icon {
+      font-size: 20px;
+    }
+    
+    .security-badge-text {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ig-cf-text);
+      font-family: 'Inter', sans-serif;
+      letter-spacing: 0.05em;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+      .content-wrapper {
+        grid-template-columns: 1fr;
+        gap: 48px;
+      }
+      
+      .form-section {
+        padding: 36px 28px;
+      }
+      
+      .brand-title {
+        font-size: 2.8rem;
+      }
+      
+      .brand-subtitle {
+        font-size: 1.6rem;
+      }
+    }
+  
+
+
+    /* IMAGE SECTION - CORAÇÃO VERDE 3D + SEM BOLINHA */
+    .image-section {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .image-container {
+      position: relative;
+      width: 380px;
+      height: 380px;
+    }
+    
+    /* Glow rings animados */
+    .glow-ring {
+      position: absolute;
+      inset: -40px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        var(--ig-cf-green),
+        transparent,
+        var(--ig-cf-green)
+      );
+      filter: blur(30px);
+      opacity: 0.6;
+      animation: rotate-glow 8s linear infinite;
+      z-index: 0;
+    }
+    
+    @keyframes rotate-glow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    .glow-ring-2 {
+      animation: rotate-glow 6s linear infinite reverse;
+      inset: -20px;
+      filter: blur(20px);
+      opacity: 0.4;
+    }
+    
+    /* Imagem Principal */
+    .profile-image {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 6px solid var(--ig-cf-surface);
+      box-shadow: var(--shadow-xl);
+      z-index: 2;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .profile-image:hover {
+      transform: scale(1.05);
+      border-color: var(--ig-cf-green);
+      box-shadow: var(--shadow-xl), var(--shadow-glow);
+    }
+    
+    /* Coração VERDE VIBRANTE 3D (substitui o rosa) */
+    .heart-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #00ff7f, #00f178, #00b894);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 8px 24px rgba(0, 255, 127, 0.6),
+        0 0 40px rgba(0, 241, 120, 0.4),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 4px 8px rgba(255, 255, 255, 0.3);
+      z-index: 10;
+      animation: heartbeat-green 1.5s ease-in-out infinite;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 3px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    .heart-badge:hover {
+      transform: scale(1.15);
+      box-shadow: 
+        0 12px 32px rgba(0, 255, 127, 0.8),
+        0 0 60px rgba(0, 241, 120, 0.6);
+    }
+    
+    .heart-badge svg {
+      width: 32px;
+      height: 32px;
+      color: white;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    }
+    
+    @keyframes heartbeat-green {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: 
+          0 8px 24px rgba(0, 255, 127, 0.6),
+          0 0 40px rgba(0, 241, 120, 0.4);
+      }
+      25% { 
+        transform: scale(1.1);
+        box-shadow: 
+          0 12px 32px rgba(0, 255, 127, 0.8),
+          0 0 60px rgba(0, 241, 120, 0.6);
+      }
+      50% { transform: scale(1); }
+      75% { transform: scale(1.05); }
+    }
+    
+    /* ÍCONE DA FOTO (substitui o coração verde) */
+    .photo-icon-badge {
+      position: absolute;
+      bottom: 80px;
+      left: 20px;
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, #00ff7f, #00f178);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        0 8px 24px rgba(0, 241, 120, 0.5),
+        0 0 30px rgba(0, 255, 127, 0.3);
+      z-index: 10;
+      animation: float-icon 3s ease-in-out infinite;
+      cursor: pointer;
+      border: 4px solid var(--ig-cf-surface);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .photo-icon-badge:hover {
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 
+        0 12px 32px rgba(0, 241, 120, 0.7),
+        0 0 50px rgba(0, 255, 127, 0.5);
+    }
+    
+    /* IMAGEM DENTRO DO BADGE */
+    .photo-icon-badge img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+    
+    @keyframes float-icon {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    /* Responsive Image Section */
+    @media (max-width: 968px) {
+      .image-section {
+        order: -1;
+        height: 400px;
+      }
+      
+      .image-container {
+        width: 320px;
+        height: 320px;
+      }
+      
+      .heart-badge {
+        width: 56px;
+        height: 56px;
+      }
+      
+      .heart-badge svg {
+        width: 28px;
+        height: 28px;
+      }
+      
+      .photo-icon-badge {
+        width: 60px;
+        height: 60px;
+        bottom: 60px;
+      }
+
+    /* Aumenta nome Giulia Castro no mobile */
+    @media (max-width: 768px) {
+      #nome-giulia-mobile,
+      .brand-subtitle {
+        font-size: 3.5rem !important;
+        font-weight: 600 !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #nome-giulia-mobile,
+      .brand-subtitle {
+        font-size: 2.2rem !important;
+        font-weight: 600 !important;
+      }
+    }
+
+
+  

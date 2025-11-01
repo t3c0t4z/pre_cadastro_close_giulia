@@ -1,394 +1,459 @@
 /**
  * ============================================================================
  * Close Friends VIP - Giulia Castro
- * SCRIPT EXTERNO - Funcionalidades
+ * JAVASCRIPT EXTERNO - Funções e Lógica
  * ============================================================================
  * Data de criação: 30/10/2025
- * Última atualização: 01/11/2025
+ * Última atualização: 30/10/2025
  * ============================================================================
  */
 
-// ============================================================================
-// CONFIGURAÇÕES
-// ============================================================================
+'use strict';
 
-const CONFIG = {
-  WEBHOOK_URL: 'https://n8noraclefull.t3c0t4z.shop/webhook/lead-cadastro',
-  TIMEOUT: 30000,
-  AUTO_HIDE_ERROR: 5000,
-  SCROLL_BEHAVIOR: 'smooth'
+
+// ========================================
+// REGEX PATTERNS RIGOROSOS
+// ========================================
+const VALIDATION_PATTERNS = {
+  instagram: /^@[a-zA-Z0-9_.]{1,29}$/,
+  whatsapp: /^\(\d{2}\)\s\d{4,5}-\d{4}$/,
+  email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 };
 
-// ============================================================================
-// VALIDAÇÕES
-// ============================================================================
-
-const VALIDATORS = {
-  instagram: (value) => {
-    const cleanValue = value.trim();
-    const regex = /^@?[a-zA-Z0-9._]{1,30}$/;
-    return regex.test(cleanValue);
+const VALIDATION_MESSAGES = {
+  instagram: {
+    empty: 'Username do Instagram é obrigatório',
+    invalid: 'Username deve começar com @ e ter 2-30 caracteres',
+    success: '✓ Username válido'
   },
-
-  whatsapp: (value) => {
-    const cleanValue = value.replace(/\D/g, '');
-    return cleanValue.length >= 10 && cleanValue.length <= 15;
+  whatsapp: {
+    empty: 'WhatsApp é obrigatório',
+    invalid: 'Formato inválido. Use: (21) 97191-6161',
+    success: '✓ WhatsApp válido'
   },
-
-  email: (value) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(value.trim());
+  email: {
+    empty: 'Email é obrigatório',
+    invalid: 'Email inválido. Use: seu@email.com',
+    success: '✓ Email válido'
   }
 };
 
-// ============================================================================
+// ========================================
 // ELEMENTOS DO DOM
-// ============================================================================
+// ========================================
+const form = document.getElementById('cfForm');
+const usernameInput = document.getElementById('username');
+const whatsappInput = document.getElementById('whatsapp');
+const emailInput = document.getElementById('email');
+const submitBtn = document.getElementById('submitBtn');
+const themeToggle = document.getElementById('themeToggle');
+const quickAccess = document.getElementById('quickAccess');
+const profileImg = document.getElementById('profileImg');
 
-const DOM = {
-  form: document.getElementById('cfForm'),
-  usernameInput: document.getElementById('username'),
-  whatsappInput: document.getElementById('whatsapp'),
-  emailInput: document.getElementById('email'),
-  submitBtn: document.getElementById('submitBtn'),
-  errorMessage: document.getElementById('errorMessage'),
-  themeToggle: document.getElementById('themeToggle'),
-  quickAccess: document.getElementById('quickAccess')
-};
+// ========================================
+// VALIDAÇÃO EM TEMPO REAL
+// ========================================
 
-// ============================================================================
-// THEME TOGGLE
-// ============================================================================
-
-function initThemeToggle() {
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme', savedTheme);
-
-  DOM.themeToggle.addEventListener('click', () => {
-    const currentTheme = document.documentElement.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  });
-}
-
-// ============================================================================
-// QUICK ACCESS
-// ============================================================================
-
-function initQuickAccess() {
-  DOM.quickAccess.addEventListener('click', () => {
-    DOM.form.scrollIntoView({ behavior: CONFIG.SCROLL_BEHAVIOR, block: 'start' });
-    DOM.usernameInput.focus();
-  });
-}
-
-// ============================================================================
-// VALIDAÇÃO DE INPUTS
-// ============================================================================
-
-function validateInput(input, type) {
-  const value = input.value.trim();
-  const errorElement = document.getElementById(`${type}Error`);
-  const successElement = document.getElementById(`${type}Success`);
-  const isValid = VALIDATORS[type](value);
-
-  input.classList.remove('valid', 'invalid');
-  errorElement.classList.remove('show');
-  successElement.classList.remove('show');
-
-  if (value.length === 0) {
-    return null; // Campo vazio
-  }
-
-  if (isValid) {
-    input.classList.add('valid');
-    successElement.classList.add('show');
-    successElement.textContent = '✓ Válido';
-    return true;
-  } else {
-    input.classList.add('invalid');
-    errorElement.classList.add('show');
-    
-    switch(type) {
-      case 'instagram':
-        errorElement.textContent = 'Instagram inválido (@usuario)';
-        break;
-      case 'whatsapp':
-        errorElement.textContent = 'WhatsApp inválido (DDD + número)';
-        break;
-      case 'email':
-        errorElement.textContent = 'E-mail inválido';
-        break;
+function validateUsername(value, showFeedback = true) {
+  const errorEl = document.getElementById('usernameError');
+  const successEl = document.getElementById('usernameSuccess');
+  
+  errorEl.classList.remove('show');
+  successEl.classList.remove('show');
+  usernameInput.classList.remove('valid', 'invalid');
+  
+  if (!value) {
+    if (showFeedback) {
+      errorEl.textContent = VALIDATION_MESSAGES.instagram.empty;
+      errorEl.classList.add('show');
+      usernameInput.classList.add('invalid');
     }
     return false;
   }
+  
+  if (!value.startsWith('@')) {
+    usernameInput.value = '@' + value;
+    value = usernameInput.value;
+  }
+  
+  if (!VALIDATION_PATTERNS.instagram.test(value)) {
+    if (showFeedback) {
+      errorEl.textContent = VALIDATION_MESSAGES.instagram.invalid;
+      errorEl.classList.add('show');
+      usernameInput.classList.add('invalid');
+    }
+    return false;
+  }
+  
+  if (showFeedback) {
+    successEl.textContent = VALIDATION_MESSAGES.instagram.success;
+    successEl.classList.add('show');
+    usernameInput.classList.add('valid');
+  }
+  return true;
 }
 
-// Adicionar validação em tempo real
-DOM.usernameInput.addEventListener('blur', () => validateInput(DOM.usernameInput, 'instagram'));
-DOM.whatsappInput.addEventListener('blur', () => validateInput(DOM.whatsappInput, 'whatsapp'));
-DOM.emailInput.addEventListener('blur', () => validateInput(DOM.emailInput, 'email'));
-
-// Limpar feedback ao digitar
-DOM.usernameInput.addEventListener('input', () => {
-  const errorEl = document.getElementById('usernameError');
-  const successEl = document.getElementById('usernameSuccess');
-  errorEl.classList.remove('show');
-  successEl.classList.remove('show');
-  DOM.usernameInput.classList.remove('valid', 'invalid');
-});
-
-DOM.whatsappInput.addEventListener('input', () => {
+function validateWhatsApp(value, showFeedback = true) {
   const errorEl = document.getElementById('whatsappError');
   const successEl = document.getElementById('whatsappSuccess');
+  
   errorEl.classList.remove('show');
   successEl.classList.remove('show');
-  DOM.whatsappInput.classList.remove('valid', 'invalid');
-});
+  whatsappInput.classList.remove('valid', 'invalid');
+  
+  if (!value) {
+    if (showFeedback) {
+      errorEl.textContent = VALIDATION_MESSAGES.whatsapp.empty;
+      errorEl.classList.add('show');
+      whatsappInput.classList.add('invalid');
+    }
+    return false;
+  }
+  
+  if (!VALIDATION_PATTERNS.whatsapp.test(value)) {
+    if (showFeedback) {
+      errorEl.textContent = VALIDATION_MESSAGES.whatsapp.invalid;
+      errorEl.classList.add('show');
+      whatsappInput.classList.add('invalid');
+    }
+    return false;
+  }
+  
+  if (showFeedback) {
+    successEl.textContent = VALIDATION_MESSAGES.whatsapp.success;
+    successEl.classList.add('show');
+    whatsappInput.classList.add('valid');
+  }
+  return true;
+}
 
-DOM.emailInput.addEventListener('input', () => {
+function validateEmail(value, showFeedback = true) {
   const errorEl = document.getElementById('emailError');
   const successEl = document.getElementById('emailSuccess');
+  
   errorEl.classList.remove('show');
   successEl.classList.remove('show');
-  DOM.emailInput.classList.remove('valid', 'invalid');
-});
-
-// ============================================================================
-// FORMATAÇÃO DE INPUTS
-// ============================================================================
-
-function formatWhatsApp(value) {
-  const cleaned = value.replace(/\D/g, '');
+  emailInput.classList.remove('valid', 'invalid');
   
-  if (cleaned.length <= 2) {
-    return cleaned;
-  } else if (cleaned.length <= 7) {
-    return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2)}`;
+  if (!value) {
+    if (showFeedback) {
+      errorEl.textContent = VALIDATION_MESSAGES.email.empty;
+      errorEl.classList.add('show');
+      emailInput.classList.add('invalid');
+    }
+    return false;
+  }
+  
+  if (!VALIDATION_PATTERNS.email.test(value)) {
+    if (showFeedback) {
+      errorEl.textContent = VALIDATION_MESSAGES.email.invalid;
+      errorEl.classList.add('show');
+      emailInput.classList.add('invalid');
+    }
+    return false;
+  }
+  
+  if (showFeedback) {
+    successEl.textContent = VALIDATION_MESSAGES.email.success;
+    successEl.classList.add('show');
+    emailInput.classList.add('valid');
+  }
+  return true;
+}
+
+// ========================================
+// MÁSCARA DE WHATSAPP
+// ========================================
+function maskWhatsApp(value) {
+  value = value.replace(/\D/g, '');
+  value = value.substring(0, 11);
+  
+  if (value.length <= 2) {
+    value = value.replace(/(\d{0,2})/, '($1');
+  } else if (value.length <= 6) {
+    value = value.replace(/(\d{2})(\d{0,4})/, '($1) $2');
+  } else if (value.length <= 10) {
+    value = value.replace(/(\d{2})(\d{4})(\d{0,4})/, '($1) $2-$3');
   } else {
-    return `(${cleaned.slice(0, 2)}) ${cleaned.slice(2, 7)}-${cleaned.slice(7, 11)}`;
+    value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
+  }
+  
+  return value;
+}
+
+// ========================================
+// EVENT LISTENERS - VALIDAÇÃO
+// ========================================
+
+usernameInput.addEventListener('input', (e) => {
+  validateUsername(e.target.value.trim(), false);
+});
+
+usernameInput.addEventListener('blur', (e) => {
+  validateUsername(e.target.value.trim(), true);
+});
+
+whatsappInput.addEventListener('input', (e) => {
+  e.target.value = maskWhatsApp(e.target.value);
+  validateWhatsApp(e.target.value, false);
+});
+
+whatsappInput.addEventListener('blur', (e) => {
+  validateWhatsApp(e.target.value, true);
+});
+
+emailInput.addEventListener('input', (e) => {
+  validateEmail(e.target.value.trim(), false);
+});
+
+emailInput.addEventListener('blur', (e) => {
+  validateEmail(e.target.value.trim(), true);
+});
+
+// ========================================
+// QUICK ACCESS BUTTON
+// ========================================
+quickAccess.addEventListener('click', () => {
+  form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  usernameInput.focus();
+});
+
+// ========================================
+// THEME TOGGLE
+// ========================================
+let isDarkTheme = true;
+
+themeToggle.addEventListener('click', () => {
+  isDarkTheme = !isDarkTheme;
+  document.documentElement.setAttribute('data-theme', isDarkTheme ? 'dark' : 'light');
+  
+  const icon = themeToggle.querySelector('svg path');
+  if (isDarkTheme) {
+    icon.setAttribute('d', 'M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z');
+  } else {
+    icon.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z');
+  }
+  
+  localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+});
+
+const savedTheme = localStorage.getItem('theme');
+if (savedTheme) {
+  isDarkTheme = savedTheme === 'dark';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  
+  const icon = themeToggle.querySelector('svg path');
+  if (!isDarkTheme) {
+    icon.setAttribute('d', 'M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z');
   }
 }
 
-function formatInstagram(value) {
-  let formatted = value.trim();
-  if (formatted && !formatted.startsWith('@')) {
-    formatted = '@' + formatted;
+// ========================================
+// EFEITOS NA IMAGEM
+// ========================================
+
+profileImg.addEventListener('mousemove', (e) => {
+  const rect = profileImg.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  
+  const centerX = rect.width / 2;
+  const centerY = rect.height / 2;
+  
+  const rotateX = (y - centerY) / 20;
+  const rotateY = (centerX - x) / 20;
+  
+  profileImg.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+});
+
+profileImg.addEventListener('mouseleave', () => {
+  profileImg.style.transform = '';
+});
+
+profileImg.addEventListener('click', (e) => {
+  const ripple = document.createElement('div');
+  const rect = profileImg.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = e.clientX - rect.left - size / 2;
+  const y = e.clientY - rect.top - size / 2;
+  
+  ripple.style.cssText = `
+    position: absolute;
+    width: ${size}px;
+    height: ${size}px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0, 241, 120, 0.4) 0%, transparent 70%);
+    top: ${y}px;
+    left: ${x}px;
+    pointer-events: none;
+    animation: ripple-expand 0.8s ease-out;
+    z-index: 5;
+  `;
+  
+  const container = profileImg.parentElement;
+  container.style.position = 'relative';
+  container.appendChild(ripple);
+  
+  setTimeout(() => ripple.remove(), 800);
+});
+
+const rippleStyle = document.createElement('style');
+rippleStyle.textContent = `
+  @keyframes ripple-expand {
+    from { transform: scale(0); opacity: 1; }
+    to { transform: scale(2.5); opacity: 0; }
   }
-  return formatted.toLowerCase();
-}
+`;
+document.head.appendChild(rippleStyle);
 
-DOM.whatsappInput.addEventListener('input', (e) => {
-  e.target.value = formatWhatsApp(e.target.value);
-});
-
-DOM.usernameInput.addEventListener('input', (e) => {
-  e.target.value = formatInstagram(e.target.value);
-});
-
-// ============================================================================
-// SUBMISSÃO DO FORMULÁRIO
-// ============================================================================
-
-async function submitForm(e) {
+// =================================================================
+// SUBMIT PARA N8N E REDIRECIONAMENTO (LÓGICA ALTERADA)
+// =================================================================
+form.addEventListener('submit', async (e) => {
   e.preventDefault();
-
-  // Validar todos os campos
-  const usernameValid = validateInput(DOM.usernameInput, 'instagram');
-  const whatsappValid = validateInput(DOM.whatsappInput, 'whatsapp');
-  const emailValid = validateInput(DOM.emailInput, 'email');
-
-  if (!usernameValid || !whatsappValid || !emailValid) {
-    alert('⚠️ Preencha todos os campos corretamente!');
+  
+  console.log('🚀 Form submitted!');
+  
+  const username = usernameInput.value.trim();
+  const whatsapp = whatsappInput.value.trim();
+  const email = emailInput.value.trim();
+  
+  const isUsernameValid = validateUsername(username, true);
+  const isWhatsAppValid = validateWhatsApp(whatsapp, true);
+  const isEmailValid = validateEmail(email, true);
+  
+  if (!isUsernameValid || !isWhatsAppValid || !isEmailValid) {
+    console.log('❌ Validação falhou');
+    const firstInvalid = form.querySelector('.form-input.invalid');
+    if (firstInvalid) {
+      firstInvalid.focus();
+      firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
     return;
   }
-
-  // Desabilitar botão
-  DOM.submitBtn.disabled = true;
-  DOM.submitBtn.textContent = '⏳ Enviando...';
-
-  // Esconder erro anterior
-  hideErrorMessage();
-
+  
+  console.log('✅ Validação OK');
+  
+  submitBtn.disabled = true;
+  submitBtn.textContent = '⏳ Processando...';
+  submitBtn.style.opacity = '0.7';
+  
+  const payload = {
+    username: username,
+    whatsapp: whatsapp,
+    email: email,
+    submitted_at: new Date().toISOString(),
+    source: 'close_friends_landing_page'
+  };
+  
+  console.log('📤 Enviando dados:', payload);
+  
   try {
-    const formData = {
-      status: 'sucesso',
-      tipo: 'Assinante_cadastrado_com_sucesso',
-      mensagem: 'Lead cadastrado com sucesso na Close Friends!',
-      username: DOM.usernameInput.value.trim(),
-      whatsapp: DOM.whatsappInput.value.replace(/\D/g, ''),
-      email: DOM.emailInput.value.trim(),
-      origem: window.location.href,
-      cadastro_em: new Date().toISOString(),
-      registrado_em: new Date().toISOString(),
-      response_code: 201,
-      sucesso: true
-    };
+    const n8nWebhookUrl = 'https://n8noraclefull.t3c0t4z.shop/webhook/lead-cadastro';
+    const successRedirectUrl = 'https://closefriendsgiuliacastrovprecadastro.nextupduo.com/';
 
-    // Enviar para o webhook
-    const response = await fetch(CONFIG.WEBHOOK_URL, {
+    console.log('🔗 Chamando webhook:', n8nWebhookUrl);
+    
+    const response = await fetch(n8nWebhookUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(formData),
-      signal: AbortSignal.timeout(CONFIG.TIMEOUT)
+      body: JSON.stringify(payload)
     });
-
-    const data = await response.json().catch(() => ({}));
-
-    // Verificar se é erro de duplicado
-    if (response.status === 409 || 
-        data.code === '23505' || 
-        data.message?.toLowerCase().includes('duplicate') ||
-        data.message?.toLowerCase().includes('duplicado')) {
-      
-      showDuplicateError();
-      resetSubmitButton();
-      return;
+    
+    console.log('📥 Response status:', response.status);
+    console.log('📥 Response ok:', response.ok);
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('❌ Erro na resposta do n8n:', errorText);
+      throw new Error('Erro ao enviar dados para o servidor');
     }
-
-    // Sucesso
-    if (response.ok || response.status === 201 || response.status === 200) {
-      showSuccessState();
-      DOM.form.reset();
-      clearAllValidation();
-      
-      setTimeout(() => {
-        resetSubmitButton();
-      }, 3000);
-    } else {
-      throw new Error(`Erro HTTP: ${response.status}`);
-    }
-
+    
+    const data = await response.json();
+    console.log('📦 Dados recebidos do n8n:', data);
+    
+    // SUCESSO! n8n recebeu os dados.
+    // Agora, redirecionamos para o seu domínio.
+    
+    console.log('✅ Sucesso! n8n recebeu os dados.');
+    createConfetti();
+    
+    submitBtn.textContent = '✅ Sucesso! Redirecionando...';
+    submitBtn.style.background = 'linear-gradient(135deg, #00f178, #00b894)';
+    submitBtn.style.opacity = '1';
+    
+    console.log(`🔄 Redirecionando para: ${successRedirectUrl} em 1.5s...`);
+    
+    setTimeout(() => {
+      console.log('🌐 Redirecionando agora...');
+      window.location.href = successRedirectUrl;
+    }, 1500);
+    
   } catch (error) {
-    console.error('Erro ao enviar formulário:', error);
-
-    // Verificar se é erro de duplicado
-    if (error.message?.toLowerCase().includes('duplicate') || 
-        error.message?.toLowerCase().includes('duplicado')) {
-      showDuplicateError();
-    } else {
-      alert('❌ Erro ao enviar cadastro. Tente novamente!');
-    }
-
-    resetSubmitButton();
+    console.error('❌ Erro ao enviar:', error);
+    
+    submitBtn.textContent = '❌ Erro - Tente Novamente';
+    submitBtn.style.background = 'linear-gradient(135deg, #ff4757, #e84118)';
+    submitBtn.style.opacity = '1';
+    
+    // Removido 'pagamento' da mensagem de erro
+    alert('❌ Erro ao enviar seu cadastro.\n\nVerifique o console (F12) para mais detalhes.\n\nErro: ' + error.message);
+    
+    setTimeout(() => {
+      submitBtn.disabled = false;
+      // Alterado para 'Enviar Cadastro' para bater com o HTML original
+      submitBtn.textContent = '🔥 Enviar Cadastro'; 
+      submitBtn.style.background = '';
+      submitBtn.style.opacity = '';
+    }, 3000);
   }
-}
-
-// ============================================================================
-// FUNÇÕES DE ERRO
-// ============================================================================
-
-function showDuplicateError() {
-  const errorEl = document.getElementById('errorMessage');
-  
-  if (!errorEl) {
-    console.error('Elemento de erro não encontrado');
-    return;
-  }
-
-  errorEl.style.display = 'block';
-  
-  // Scroll até o erro
-  errorEl.scrollIntoView({ 
-    behavior: CONFIG.SCROLL_BEHAVIOR, 
-    block: 'center' 
-  });
-
-  // Esconder após tempo definido
-  setTimeout(() => {
-    hideErrorMessage();
-  }, CONFIG.AUTO_HIDE_ERROR);
-}
-
-function hideErrorMessage() {
-  const errorEl = document.getElementById('errorMessage');
-  if (errorEl) {
-    errorEl.style.display = 'none';
-  }
-}
-
-// ============================================================================
-// FUNÇÕES DE ESTADO
-// ============================================================================
-
-function showSuccessState() {
-  DOM.submitBtn.textContent = '✅ Cadastro Realizado!';
-  DOM.submitBtn.style.background = '#22c55e';
-}
-
-function resetSubmitButton() {
-  DOM.submitBtn.disabled = false;
-  DOM.submitBtn.textContent = '🔥 Enviar Cadastro';
-  DOM.submitBtn.style.background = '';
-}
-
-function clearAllValidation() {
-  [DOM.usernameInput, DOM.whatsappInput, DOM.emailInput].forEach(input => {
-    input.classList.remove('valid', 'invalid');
-  });
-
-  ['usernameError', 'usernameSuccess', 'whatsappError', 'whatsappSuccess', 'emailError', 'emailSuccess'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove('show');
-  });
-}
-
-// ============================================================================
-// INICIALIZAÇÃO
-// ============================================================================
-
-document.addEventListener('DOMContentLoaded', () => {
-  // Inicializar theme toggle
-  initThemeToggle();
-
-  // Inicializar quick access
-  initQuickAccess();
-
-  // Adicionar event listener ao formulário
-  DOM.form.addEventListener('submit', submitForm);
-
-  // Validar email em tempo real (mais rigoroso)
-  DOM.emailInput.addEventListener('blur', () => {
-    validateInput(DOM.emailInput, 'email');
-  });
-
-  // Permitir submit com Enter
-  DOM.form.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter' && e.target !== DOM.submitBtn) {
-      e.preventDefault();
-      DOM.form.dispatchEvent(new Event('submit'));
-    }
-  });
-
-  // Verificar tema ao carregar
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  console.log('✅ Tema carregado:', savedTheme);
-  console.log('✅ Webhook configurado:', CONFIG.WEBHOOK_URL);
 });
 
-// ============================================================================
-// FUNÇÕES UTILITÁRIAS
-// ============================================================================
-
-function getClientInfo() {
-  return {
-    userAgent: navigator.userAgent,
-    language: navigator.language,
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    timestamp: new Date().toISOString()
-  };
+// ========================================
+// CONFETTI EFFECT
+// ========================================
+function createConfetti() {
+  const colors = ['#00f178', '#00b894', '#ffd700', '#ff3b9a', '#00d2ff'];
+  const confettiCount = 60;
+  
+  for (let i = 0; i < confettiCount; i++) {
+    const confetti = document.createElement('div');
+    confetti.style.cssText = `
+      position: fixed;
+      width: ${Math.random() * 10 + 5}px;
+      height: ${Math.random() * 10 + 5}px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      top: -10px;
+      left: ${Math.random() * 100}vw;
+      border-radius: ${Math.random() > 0.5 ? '50%' : '0'};
+      pointer-events: none;
+      z-index: 9999;
+      animation: confetti-fall ${Math.random() * 3 + 2}s linear forwards;
+      transform: rotate(${Math.random() * 360}deg);
+    `;
+    
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 5000);
+  }
+  
+  const confettiStyleEl = document.createElement('style');
+  confettiStyleEl.textContent = `
+    @keyframes confetti-fall {
+      to {
+        transform: translateY(100vh) rotate(${Math.random() * 720}deg);
+        opacity: 0;
+      }
+    }
+  `;
+  document.head.appendChild(confettiStyleEl);
 }
 
-function logEvent(eventName, data = {}) {
-  console.log(`[${new Date().toLocaleTimeString()}] ${eventName}`, data);
-}
-
-// Log de inicialização
-logEvent('APP_INITIALIZED', {
-  theme: localStorage.getItem('theme') || 'dark',
-  userAgent: navigator.userAgent
-});
+// ========================================
+// CONSOLE BRANDING
+// ========================================
+console.log('%c💚 Close Friends VIP - Giulia Castro', 'color: #00f178; font-size: 24px; font-weight: bold;');
+console.log('%c✨ Landing Page Premium com n8n', 'color: #00b894; font-size: 16px; font-weight: 600;');
+console.log('%c🔍 Debug Mode ATIVADO - Todos os logs aparecerão aqui', 'color: #ffd700; font-size: 12px;');
+console.log('%c📊 Abra este console para ver o que está acontecendo com o envio para o n8n', 'color: #ff3b9a; font-size: 12px;');
